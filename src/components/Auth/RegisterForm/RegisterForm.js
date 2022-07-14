@@ -1,11 +1,13 @@
 import { View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { Input, Button, Icon, Text } from "@rneui/themed";
 import { styles } from "./RegisterForm.styles";
 import { useFormik } from "formik";
 import { initialValues, validationSchema } from "./RegisterForm.data";
 
 export function RegisterForm() {
+  const [showPassword, setShowPassword] = useState(false);
+
   const formik = useFormik({
     initialValues: initialValues(),
     validationSchema: validationSchema(),
@@ -14,6 +16,8 @@ export function RegisterForm() {
       console.log(formValue);
     },
   });
+
+  const showHiddenPassword = () => setShowPassword((prevState) => !prevState);
 
   return (
     <View style={styles.content}>
@@ -29,12 +33,13 @@ export function RegisterForm() {
       <Input
         placeholder="Contraseña"
         containerStyle={styles.input}
-        secureTextEntry={true}
+        secureTextEntry={showPassword ? false : true}
         rightIcon={
           <Icon
             type="material-comunity"
-            name="visibility-off"
+            name={showPassword ? "visibility" : "visibility-off"}
             iconStyle={styles.icon}
+            onPress={showHiddenPassword}
           />
         }
         onChangeText={(text) => formik.setFieldValue("password", text)}
@@ -43,12 +48,13 @@ export function RegisterForm() {
       <Input
         placeholder="Repetir Contraseña"
         containerStyle={styles.input}
-        secureTextEntry={true}
+        secureTextEntry={showPassword ? false : true}
         rightIcon={
           <Icon
             type="material-comunity"
-            name="visibility-off"
+            name={showPassword ? "visibility" : "visibility-off"}
             iconStyle={styles.icon}
+            onPress={showHiddenPassword}
           />
         }
         onChangeText={(text) => formik.setFieldValue("repeatPassword", text)}
