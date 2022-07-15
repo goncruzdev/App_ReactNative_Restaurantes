@@ -1,26 +1,29 @@
 import { View } from "react-native";
 import React, { useState } from "react";
-import { Input, Button, Icon, Text } from "@rneui/themed";
-import { styles } from "./RegisterForm.styles";
+import { styles } from "./LoginForm.styles";
+import { Input, Button, Icon } from "@rneui/themed";
+import { initialValues, validationSchema } from "./LoginForm.data";
 import { useFormik } from "formik";
-import { initialValues, validationSchema } from "./RegisterForm.data";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { useNavigation } from "@react-navigation/native";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { screen } from "../../../utils";
 import Toast from "react-native-toast-message";
+import { useNavigation } from "@react-navigation/native";
 
-export function RegisterForm() {
+export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
+
   const navigation = useNavigation();
+
+  const showHidePassword = () => setShowPassword((prevState) => !prevState);
 
   const formik = useFormik({
     initialValues: initialValues(),
     validationSchema: validationSchema(),
-    // validateOnChange: false, para que haga la validacion al presionar el boton
+    validateOnChange: false,
     onSubmit: async (formValue) => {
       try {
         const auth = getAuth();
-        await createUserWithEmailAndPassword(
+        await signInWithEmailAndPassword(
           auth,
           formValue.email,
           formValue.password
@@ -30,13 +33,11 @@ export function RegisterForm() {
         Toast.show({
           type: "error",
           position: "bottom",
-          text1: "Ocurrio un error intente de nuevo mas tarde",
+          text1: "Usuario o Contraseña incorrectos",
         });
       }
     },
   });
-
-  const showHiddenPassword = () => setShowPassword((prevState) => !prevState);
 
   return (
     <View style={styles.content}>
@@ -58,29 +59,14 @@ export function RegisterForm() {
             type="material-comunity"
             name={showPassword ? "visibility" : "visibility-off"}
             iconStyle={styles.icon}
-            onPress={showHiddenPassword}
+            onPress={showHidePassword}
           />
         }
         onChangeText={(text) => formik.setFieldValue("password", text)}
         errorMessage={formik.errors.password}
       />
-      <Input
-        placeholder="Repetir Contraseña"
-        containerStyle={styles.input}
-        secureTextEntry={showPassword ? false : true}
-        rightIcon={
-          <Icon
-            type="material-comunity"
-            name={showPassword ? "visibility" : "visibility-off"}
-            iconStyle={styles.icon}
-            onPress={showHiddenPassword}
-          />
-        }
-        onChangeText={(text) => formik.setFieldValue("repeatPassword", text)}
-        errorMessage={formik.errors.repeatPassword}
-      />
       <Button
-        title="Unirse"
+        title="Iniciar Sesion"
         containerStyle={styles.btnContainer}
         buttonStyle={styles.btn}
         onPress={formik.handleSubmit}
