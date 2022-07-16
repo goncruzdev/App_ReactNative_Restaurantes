@@ -7,9 +7,9 @@ import * as ImagePicker from "expo-image-picker";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export function InfoUser(props) {
+  const { uid, photoURL, displayName, email } = getAuth().currentUser;
   const [avatar, setAvatar] = useState(photoURL);
   const { setloading, setloadingText } = props;
-  const { uid, photoURL, displayName, email } = getAuth().currentUser;
 
   const changeAvatar = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
