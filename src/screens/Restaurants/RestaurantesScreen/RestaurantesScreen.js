@@ -1,18 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { Text, View } from "react-native";
 import { Button, Icon } from "@rneui/themed";
-import { screen } from "../../../utils";
+import { screen, db } from "../../../utils";
 import { styles } from "./RestaurantesScreen.styles";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { LoadingModal } from "../../../components/Shared";
+import { ListRestaurantes } from "../../../components/Restaurantes/ListRestaurantes/ListRestaurantes";
 
 export function RestaurantesScreen(props) {
   const { navigation } = props;
   const [currentUser, setcurrentUser] = useState(null);
+  const [restaurants, setrestaurants] = useState(null);
 
   useEffect(() => {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       setcurrentUser(user);
+    });
+  }, []);
+
+  useEffect(() => {
+    const q = query(
+      collection(db, "restaurantes"),
+      orderBy("createAt", "desc")
+    );
+
+    onSnapshot(q, (snapshot) => {
+      setrestaurants(snapshot.docs);
     });
   }, []);
 
@@ -25,7 +40,12 @@ export function RestaurantesScreen(props) {
 
   return (
     <View style={styles.content}>
-      <Text>restaurantes</Text>
+      {!restaurants ? (
+        <LoadingModal show text="Cargando..." />
+      ) : (
+        <ListRestaurantes restaurants={restaurants} />
+      )}
+
       {currentUser && (
         <Icon
           reverse
