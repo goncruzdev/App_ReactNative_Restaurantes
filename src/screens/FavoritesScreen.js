@@ -19,7 +19,7 @@ import { Loading } from "../components/Shared";
 import { size } from "lodash";
 
 export function FavoritesScreen() {
-  const [hasLogged, setHasLogged] = useState(null);
+  const [hasLogged, setHasLogged] = useState(false);
   const [restaurantes, setRestaurantes] = useState(null);
   const auth = getAuth();
 
@@ -30,26 +30,28 @@ export function FavoritesScreen() {
   }, []);
 
   useEffect(() => {
-    const q = query(
-      collection(db, "favorites"),
-      where("idUser", "==", auth.currentUser.uid)
-    );
+    if (hasLogged) {
+      const q = query(
+        collection(db, "favorites"),
+        where("idUser", "==", auth.currentUser.uid)
+      );
 
-    onSnapshot(q, async (snapshot) => {
-      let restaurantArray = [];
-      for await (const item of snapshot.docs) {
-        const data = item.data();
-        const docRef = doc(db, "restaurantes", data.idRestaurante);
-        const docSnap = await getDoc(docRef);
-        const newData = docSnap.data();
-        newData.idFavorite = data.id;
+      onSnapshot(q, async (snapshot) => {
+        let restaurantArray = [];
+        for await (const item of snapshot.docs) {
+          const data = item.data();
+          const docRef = doc(db, "restaurantes", data.idRestaurante);
+          const docSnap = await getDoc(docRef);
+          const newData = docSnap.data();
+          newData.idFavorite = data.id;
 
-        restaurantArray.push(newData);
-      }
+          restaurantArray.push(newData);
+        }
 
-      setRestaurantes(restaurantArray);
-    });
-  }, []);
+        setRestaurantes(restaurantArray);
+      });
+    }
+  }, [hasLogged]);
 
   if (!hasLogged) return <UserNotLogged />;
 
