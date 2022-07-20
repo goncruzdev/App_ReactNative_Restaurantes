@@ -17,7 +17,6 @@ import {
 } from "../components/Favorites";
 import { Loading } from "../components/Shared";
 import { size } from "lodash";
-import { map } from "@firebase/util";
 
 export function FavoritesScreen() {
   const [hasLogged, setHasLogged] = useState(null);
