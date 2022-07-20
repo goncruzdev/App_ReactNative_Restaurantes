@@ -3,6 +3,7 @@ import { RestaurantesScreen } from "../screens/Restaurants/RestaurantesScreen";
 import { screen } from "../utils";
 import { AddRestaurantScreen } from "../screens/Restaurants/AddRestaurante";
 import { RestauranteScreen } from "../components/Restaurantes/RestauranteScreen/RestauranteScreen";
+import { AddReviewRestauranteScreen } from "../screens/Restaurants/AddReviewRestauranteScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +24,11 @@ export function RestaurantStack() {
         name={screen.restaurant.restaurant}
         component={RestauranteScreen}
         options={{ title: "Restaurante" }}
+      />
+      <Stack.Screen
+        name={screen.restaurant.addReviewRestaurante}
+        component={AddReviewRestauranteScreen}
+        options={{ title: "Nueva Opinion" }}
       />
     </Stack.Navigator>
   );

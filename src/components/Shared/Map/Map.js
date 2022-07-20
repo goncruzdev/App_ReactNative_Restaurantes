@@ -9,7 +9,7 @@ export function Map({ location, name }) {
       latitude: location.latitude,
       longitude: location.longitude,
       zoom: 19,
-      query: "restaurante",
+      query: name,
     });
   };
   return (

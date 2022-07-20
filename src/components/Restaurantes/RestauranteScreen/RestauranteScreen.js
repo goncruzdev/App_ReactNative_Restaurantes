@@ -11,7 +11,13 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../utils";
 import { Carousel, Loading } from "../../Shared";
-import { Header, Info } from "../../../components/Restaurante";
+import {
+  Header,
+  Info,
+  BtnReviewForm,
+  Reviews,
+  BtnFavorite,
+} from "../../../components/Restaurante";
 
 export function RestauranteScreen({ route }) {
   const [restaurante, setrestaurante] = useState(null);
@@ -30,6 +36,9 @@ export function RestauranteScreen({ route }) {
       <Carousel images={restaurante.images} height={250} width={width} />
       <Header restaurante={restaurante} />
       <Info restaurante={restaurante} />
+      <BtnReviewForm idRestaurante={restaurante.id} />
+      <Reviews idRestaurante={restaurante.id} />
+      <BtnFavorite idRestaurante={restaurante.id} />
     </ScrollView>
   );
 }
